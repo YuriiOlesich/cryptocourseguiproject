@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Криптологія — практичний GUI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav class="tabs" aria-label="Алгоритми">
+      <button class="tab active" data-tab="caesar">01 <span>Цезар</span></button>
+      <button class="tab" data-tab="vigenere">02 <span>Віженер ROT2</span></button>
+      <button class="tab" data-tab="polybius">03 <span>Полібій 6×6</span></button>
+      <button class="tab" data-tab="rsa">04 <span>RSA</span></button>
+    </nav>
+
+    <main>
+      <section class="panel active" id="caesar">
+        <div class="panel-heading"><div><p class="eyebrow">МОДУЛЬ 01</p>
+          <h2>Шифр Цезаря</h2>
+          <p>Моноалфавітний зсув в українському алфавіті з 33 літер.</p>
+        </div><span class="tag">n = 33</span>
+      </div>
+        <div class="field-grid">
+          <label class="field wide">Відкритий текст<textarea id="caesarText" rows="2">ОЛЕСІЧ ЮРІЙ ЮРІЙОВИЧ</textarea></label>
+          <label class="field">Ключ зсуву <input id="caesarKey" type="number" value="3"></label>
+          <label class="field">Операція<select id="caesarMode"><option value="enc">Шифрування</option><option value="dec">Розшифрування</option></select></label>
+        </div>
+        <div class="actions"><button class="primary" id="caesarRun">Виконати</button><button class="secondary" id="caesarSwap">Підставити результат</button></div>
+        <div class="result"><div class="result-label">РЕЗУЛЬТАТ</div><output id="caesarOut">СОЗФКЬ БУКМ БУКМСДЙЬ</output><button class="copy" data-copy="caesarOut">Копіювати</button></div>
+        <details>
+          <summary>Алгоритм та формули</summary>
+          <p>Шифрування: Cᵢ = (Pᵢ + k) mod 33. Розшифрування: Pᵢ = (Cᵢ − k) mod 33. Пробіли та розділові знаки зберігаються.</p>
+          <div id="caesarSteps" class="steps">
+
+          </div>
+        </details>
+      </section>
+
+      <section class="panel" id="vigenere">
+        <div class="panel-heading"><div><p class="eyebrow">МОДУЛЬ 02</p><h2>Квадрат Віженера ROT2</h2><p>Кожен рядок квадрата зміщується на дві позиції; ключ циклічно повторюється.</p></div><span class="tag">ROT2 · n = 33</span></div>
+        <div class="field-grid">
+          <label class="field wide">Відкритий текст / шифртекст<textarea id="vigText" rows="2">ОЛЕСІЧ ЮРІЙ ЮРІЙОВИЧ</textarea></label>
+          <label class="field">Ключ <input id="vigKey" value="ЮРІЙ"></label>
+          <label class="field">Операція<select id="vigMode"><option value="enc">Шифрування</option><option value="dec">Розшифрування</option></select></label>
+        </div>
+        <div class="actions"><button class="primary" id="vigRun">Виконати</button><button class="secondary" id="vigSwap">Підставити результат</button><button class="secondary" id="showVigSquare">Показати квадрат</button></div>
+        <div class="result"><div class="result-label">РЕЗУЛЬТАТ</div><output id="vigOut">КТШКЄБ РЙЄР РЙЄРЄШЕБ</output><button class="copy" data-copy="vigOut">Копіювати</button></div>
+        <details><summary>Алгоритм та формули</summary><p>Для шифрування: Cᵢ = (Pᵢ + 2·Kᵢ) mod 33. Для розшифрування: Pᵢ = (Cᵢ − 2·Kᵢ) mod 33. Пробіли не зсувають позицію ключа.</p><div id="vigSteps" class="steps"></div></details>
+        <div id="vigSquareWrap" class="square-wrap hidden"><h3>Квадрат Віженера ROT2 (33×33)</h3><div id="vigSquare" class="table-scroll"></div></div>
+      </section>
+
+      <section class="panel" id="polybius">
+        <div class="panel-heading"><div><p class="eyebrow">МОДУЛЬ 03</p><h2>Квадрат Полібія</h2><p>Кодування символів координатами «рядок–стовпець» у таблиці 6×6.</p></div><span class="tag">6 × 6</span></div>
+        <div class="field-grid">
+          <label class="field wide">Текст або числова послідовність<textarea id="polyText" rows="3">ОЛЕСІЧ ЮРІЙ ЮРІЙОВИЧ</textarea></label>
+          <label class="field">Операція<select id="polyMode"><option value="enc">Шифрування</option><option value="dec">Розшифрування</option></select></label>
+        </div>
+        <div class="actions"><button class="primary" id="polyRun">Виконати</button><button class="secondary" id="polySwap">Підставити результат</button></div>
+        <div class="result"><div class="result-label">РЕЗУЛЬТАТ</div><output id="polyOut">41 34 21 44 26 54 64 62 43 26 32 64 62 43 26 32 41 13 25 54</output><button class="copy" data-copy="polyOut">Копіювати</button></div>
+        <div class="square-wrap"><h3>Квадрат Полібія 6×6</h3><div id="polySquare"></div></div>
+        <details><summary>Правило кодування</summary><p>Кожен символ замінюється двозначною парою координат. Пробіл має код 64, крапка — 65, кома — 66. Порядок символів відповідає таблиці з курсової роботи.</p></details>
+      </section>
+
+      <section class="panel" id="rsa">
+        <div class="panel-heading"><div><p class="eyebrow">МОДУЛЬ 04</p><h2>Асиметричний алгоритм RSA</h2><p>Обчислення ключів, модульне піднесення до степеня та перевірка.</p></div><span class="tag">Варіант 21</span></div>
+        <div class="field-grid three">
+          <label class="field">Просте число p<input id="rsaP" type="number" value="88471"></label>
+          <label class="field">Просте число q<input id="rsaQ" type="number" value="11491"></label>
+          <label class="field">Закрита експонента d<input id="rsaD" type="number" value="578421283"></label>
+        </div>
+        <div class="actions"><button class="primary" id="rsaCalc">Обчислити параметри</button></div>
+        <div class="metrics" id="rsaMetrics">
+          <div><span>Модуль N</span><strong>1 016 620 261</strong></div><div><span>Функція Ейлера φ(N)</span><strong>1 016 520 300</strong></div><div><span>Відкрита експонента e</span><strong>270 426 247</strong></div>
+        </div>
+        <div class="rsa-columns">
+          <div class="subcard"><h3>Шифрування повідомлення M</h3><label class="field">Повідомлення M<input id="rsaM" type="text" value="2897878135"></label><label class="field">Спосіб обробки M ≥ N<select id="rsaBlockMode"><option value="mod">Зашифрувати M mod N</option><option value="blocks">Розбити на блоки по 5 цифр</option></select></label><button class="primary" id="rsaEncrypt">Зашифрувати</button><div class="mini-result"><span>Шифртекст</span><output id="rsaEncOut">300 931 108</output></div></div>
+          <div class="subcard"><h3>Розшифрування шифртексту C</h3><label class="field">Шифртекст C<input id="rsaC" type="text" value="20979746"></label><button class="primary" id="rsaDecrypt">Розшифрувати</button><div class="mini-result"><span>Відкрите повідомлення</span><output id="rsaDecOut">140 436 581</output></div></div>
+        </div>
+        <details open><summary>Покрокові обчислення та перевірки</summary><div id="rsaSteps" class="steps">N = p·q = 1 016 620 261<br>φ(N) = (p−1)(q−1) = 1 016 520 300<br>e = d⁻¹ mod φ(N) = 270 426 247<br>d·e mod φ(N) = 1</div></details>
+    </main>
+    <footer><span>ПРИКЛАДНА КРИПТОЛОГІЯ</span><span>Олесіч Юрій · ТСЗ-31 · 2026</span></footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
