@@ -95,12 +95,12 @@ function renderPoly() {
 
 function renderVig() {
   let h = '<table><tr><th>i</th>' +
-    [...ALPHABET].map(c => `<th>${c}</th>`).join("") +
+    [...ALPHABET].map((_, c) => `<th>${c}</th>`).join("") +
     '</tr>';
 
   for (let r = 0; r < 33; r++) {
-    h += `<tr><th>${r}</th>` +
-      [...ALPHABET].map((_, c) => `<td>${ALPHABET[(c + 2 * r) % 33]}</td>`).join("") +
+    h += `<tr><th>${ALPHABET[r]}</th>` +
+      [...ALPHABET].map((_, c) => `<td>${ALPHABET[(r + 2 * c) % 33]}</td>`).join("") +
       '</tr>';
   }
   return h + '</table>';
